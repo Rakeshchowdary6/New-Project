@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Result</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#submitBtn").click(function() {
+                var mobileNumber = $("#mobileNumber").val();
+
+                if (mobileNumber === "") {
+                    $("#result").text("Please enter a mobile number.");
+                    return;
+                }
+
+                $.ajax({
+                    url: "/api/students/" + mobileNumber,
+                    type: "GET",
+                    success: function(response) {
+                        if (response) {
+                            var student = response;
+                            $("#result").empty(); // Clear previous content
+
+                            $("<p>").text("Name: " + student.name).appendTo("#result");
+                            $("<p>").text("Address: " + student.address).appendTo("#result");
+                            $("<p>").text("Marks: " + student.marks).appendTo("#result");
+                        } else {
+                            $("#result").text("No student found with the given mobile number.");
+                        }
+                    },
+                    error: function() {
+                        $("#result").text("Error occurred while retrieving student data.");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Student Result</h1>
+<label for="mobileNumber">Mobile Number:</label>
+<input type="text" id="mobileNumber" name="mobileNumber">
+<br>
+<button id="submitBtn">Submit</button>
+<br>
+<br>
+<div id="result"></div>
+</body>
+</html>
